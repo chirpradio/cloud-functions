@@ -4,7 +4,7 @@ const https = require("https");
 const { Storage } = require("@google-cloud/storage");
 const storage = new Storage();
 const publicBucket = storage.bucket("chirpradio-public");
-const file = publicBucket.file("current.json");
+const file = publicBucket.file("playlist.json");
 const fileOptions = {
   contentType: "application/json",
   metadata: {

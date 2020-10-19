@@ -4,6 +4,7 @@
   "description": "Update Elasticsearch indexes with DJDB changes",
   "main": "index.js",
   "scripts": {
+    "deploy": "gcloud functions deploy updateIndexes --project chirpradio-hrd --runtime=nodejs10 --trigger-topic update_indexes",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Steve Lund <lund5000@gmail.com>",

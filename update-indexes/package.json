@@ -1,0 +1,18 @@
+{
+  "name": "update-indexes",
+  "version": "1.0.0",
+  "description": "Update Elasticsearch indexes with DJDB changes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Steve Lund <lund5000@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/datastore": "^6.1.1",
+    "@google-cloud/tasks": "^2.1.1"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^1.7.1"
+  }
+}

@@ -4,16 +4,16 @@
   "description": "Update Elasticsearch indexes with DJDB changes",
   "main": "index.js",
   "scripts": {
-    "deploy": "gcloud functions deploy updateIndexes --project chirpradio-hrd --runtime=nodejs10 --trigger-topic update_indexes",
+    "deploy": "gcloud functions deploy updateIndexes --project chirpradio-hrd --runtime=nodejs16 --trigger-topic update_indexes",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Steve Lund <lund5000@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@google-cloud/datastore": "^6.1.1",
-    "@google-cloud/tasks": "^2.1.1"
+    "@google-cloud/tasks": "^3.0.5"
   },
   "devDependencies": {
-    "@google-cloud/functions-framework": "^1.7.1"
+    "@google-cloud/functions-framework": "^3.1.2"
   }
 }

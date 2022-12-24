@@ -51,7 +51,7 @@ async function createAlbumTasks(lastRun) {
       appEngineHttpRequest: {          
         appEngineRouting: {
           service: "nextup",
-          version: "staging"
+          version: "production"
         },
         httpMethod: "POST",
         relativeUri: `/tasks/reindex/album/${album.album_id.value}`,
@@ -111,7 +111,7 @@ async function createTagEditTasks(lastRun) {
         appEngineHttpRequest: {          
           appEngineRouting: {
             service: "nextup",
-            version: "staging"
+            version: "production"
           },
           httpMethod: "POST",
           headers: {

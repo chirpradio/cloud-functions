@@ -51,7 +51,7 @@ async function createAlbumTasks(lastRun) {
       appEngineHttpRequest: {          
         appEngineRouting: {
           service: "nextup",
-          version: "staging"
+          version: "production"
         },
         httpMethod: "POST",
         relativeUri: `/tasks/reindex/album/${album.album_id.value}`,
@@ -111,7 +111,7 @@ async function createTagEditTasks(lastRun) {
         appEngineHttpRequest: {          
           appEngineRouting: {
             service: "nextup",
-            version: "staging"
+            version: "production"
           },
           httpMethod: "POST",
           headers: {
@@ -129,10 +129,12 @@ async function createTagEditTasks(lastRun) {
 
 exports.updateIndexes = async function() {
   try {
-    taskRecord = await getTaskRecord();
+    taskRecord = await getTaskRecord();    
+    console.log("creating album tasks...");
     await createAlbumTasks(taskRecord.started);
+    console.log("creating tag edit tasks...");
     await createTagEditTasks(taskRecord.started);
-    await updateTaskRecord();
+    await updateTaskRecord();    
   } catch (err) {
     console.log(err);
   }

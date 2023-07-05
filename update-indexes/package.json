@@ -11,7 +11,7 @@
   "author": "Steve Lund <lund5000@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@google-cloud/datastore": "^6.1.1",
+    "@google-cloud/datastore": "^7.5.1",
     "@google-cloud/tasks": "^3.0.5"
   },
   "devDependencies": {

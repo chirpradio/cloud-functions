@@ -3,18 +3,16 @@ from datetime import datetime
 import pytz
 import csv
 
-# recurse if necessary
-
 client = datastore.Client()
 tz = pytz.timezone('America/Chicago')
-START_DATE = datetime.fromisoformat("2023-01-01T00:00:00-06:00")
-END_DATE = datetime.fromisoformat("2024-01-01T00:00:00-06:00")
+START_DATE = datetime.fromisoformat('2023-01-01T00:00:00-06:00')
+END_DATE = datetime.fromisoformat('2024-01-01T00:00:00-06:00')
 
 def get_playlist_events():
-  query = client.query(kind="PlaylistEvent")
-  category_filter = datastore.query.PropertyFilter("categories", "IN", ["local_classic", "local_current"])
-  start_filter = datastore.query.PropertyFilter("established", ">", START_DATE)
-  end_filter = datastore.query.PropertyFilter("established", "<", END_DATE)
+  query = client.query(kind='PlaylistEvent')
+  category_filter = datastore.query.PropertyFilter('categories', 'IN', ['local_classic', 'local_current'])
+  start_filter = datastore.query.PropertyFilter('established', '>', START_DATE)
+  end_filter = datastore.query.PropertyFilter('established', '<', END_DATE)
   query.add_filter(filter=category_filter)
   query.add_filter(filter=start_filter)
   query.add_filter(filter=end_filter)
@@ -43,5 +41,5 @@ def main():
         artist_name = get_artist_name(event)
         writer.writerow([played_at, artist_name])
     
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

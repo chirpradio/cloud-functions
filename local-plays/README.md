@@ -5,7 +5,7 @@ Generates a CSV of local artists that were played in the past calendar year. Thi
 - Read access to production database
 
 # Run the script
-First, update the `START_TIME` and `END_TIME` in the source to match the previous year.
+First, update the `START_DATE` and `END_DATE` in the source to match the previous year.
 
 ```
 python3 -m venv venv

@@ -1,5 +1,6 @@
 "use strict";
 
+const functions = require('@google-cloud/functions-framework');
 const https = require("https");
 const { Storage } = require("@google-cloud/storage");
 const storage = new Storage();
@@ -32,13 +33,11 @@ const getContent = function (url) {
   });
 };
 
-exports.updatePlaylistStorage = async function (req, res) {
+functions.cloudEvent('updatePlaylistStorage', async function () {
   try {
     const currentPlaylist = await getContent(url);
-    await file.save(currentPlaylist, fileOptions);
-    res.send();
+    await file.save(currentPlaylist, fileOptions);    
   } catch (err) {
     console.error(err);
-    res.status(500).end();
   }
-};
+});

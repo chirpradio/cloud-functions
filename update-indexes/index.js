@@ -1,3 +1,5 @@
+const functions = require('@google-cloud/functions-framework');
+
 const { Datastore } = require("@google-cloud/datastore");
 const datastore = new Datastore();
 const albumOptions = {
@@ -127,7 +129,7 @@ async function createTagEditTasks(lastRun) {
 }
 
 
-exports.updateIndexes = async function() {
+functions.cloudEvent('updateIndexes', async function() {
   try {
     taskRecord = await getTaskRecord();    
     console.log("creating album tasks...");
@@ -138,4 +140,4 @@ exports.updateIndexes = async function() {
   } catch (err) {
     console.log(err);
   }
-};
+});

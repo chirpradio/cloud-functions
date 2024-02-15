@@ -1,19 +1,19 @@
 {
   "name": "update-playlist-storage",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Retrieve and store current playlist payload in a public Cloud Storage bucket",
   "main": "index.js",
   "author": "Steve Lund <lund5000@gmail.com>",
   "license": "MIT",
   "scripts": {
     "start": "functions-framework --target=updatePlaylistStorage",
-    "deploy": "gcloud functions deploy updatePlaylistStorage --project chirpradio-hrd --runtime=nodejs10 --trigger-http --allow-unauthenticated"
+    "deploy": "gcloud functions deploy updatePlaylistStorage --project chirpradio-hrd --runtime=nodejs20 --trigger-topic update_playlist_storage --docker-registry=artifact-registry"
   },
   "dependencies": {
-    "@google-cloud/storage": "^5.4.0"
+    "@google-cloud/storage": "^5.4.0",
+    "@google-cloud/functions-framework": "^3.3.0"
   },
   "devDependencies": {
-    "@google-cloud/functions-framework": "^1.7.1",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^14.1.1",

@@ -1,0 +1,21 @@
+{
+  "played_at_local_ts": 1648983400.0,
+  "dj": "DJ Megatron",
+  "artist": "BassKase",
+  "track": "Distant Mesa",
+  "notes": "",
+  "artist_is_local": true,
+  "label": "Soundpoint",
+  "played_at_gmt_ts": 1649001400,
+  "played_at_gmt": "2022-04-03T15:56:40.335",
+  "release": "For a Few Dubs More",
+  "played_at_local_expire": "2022-10-06T10:56:40.335-05:00",
+  "played_at_local": "2022-04-03T10:56:40.335-05:00",
+  "id": "ahBzfmNoaXJwcmFkaW8taHJkchoLEg1QbGF5bGlzdEV2ZW50GICAoP32jrsKDA",
+  "lastfm_urls": {
+    "med_image": null,
+    "sm_image": null,
+    "_processed": true,
+    "large_image": null
+  }
+}

@@ -1,3 +1,5 @@
+const functions = require('@google-cloud/functions-framework');
+
 const { Datastore } = require('@google-cloud/datastore');
 const datastore = new Datastore();
 
@@ -116,7 +118,7 @@ async function publishMessage(message) {
   await pubsub.topic("playlist-track-processed").publishMessage({ data });
 }
 
-exports.processPlaylistTrack = async function(message) {
+functions.cloudEvent("processPlaylistTrack", async function(message) {
   const data = JSON.parse(Buffer.from(message.data, "base64").toString());
   if (data.action === "added") {  
     const [playlistTrack] = await datastore.get(data.track.__key);    
@@ -146,4 +148,4 @@ exports.processPlaylistTrack = async function(message) {
       }));
     }
   }    
-}
+});

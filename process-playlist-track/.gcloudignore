@@ -8,3 +8,5 @@
 #
 .gcloudignore
 node_modules
+__mocks__
+env.yaml

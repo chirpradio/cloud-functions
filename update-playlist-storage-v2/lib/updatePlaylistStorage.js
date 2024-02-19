@@ -16,17 +16,18 @@ const FILE_OPTIONS = {
 };
 
 module.exports = async function (message) {
-  try {
-    const previousPlaylist = await loadJson(file); 
-    const msgData = JSON.parse(Buffer.from(message.data, "base64").toString());
-    const track = formatTrack(msgData.track);
-    const currentPlaylist = updateNowPlaying(track, previousPlaylist);
-    await file.save(JSON.stringify(currentPlaylist), FILE_OPTIONS);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await pubsub.topic("playlist-storage-updated").publishMessage({
-      data: Buffer.from(message.data)
-    });
+  const msgData = JSON.parse(Buffer.from(message.data, "base64").toString());
+  if (msgData.action === "added") {
+    try {
+      const previousPlaylist = await loadJson(file); 
+      const track = formatTrack(msgData.track);
+      const currentPlaylist = updateNowPlaying(track, previousPlaylist);
+      await file.save(JSON.stringify(currentPlaylist), FILE_OPTIONS);
+      await pubsub.topic("playlist-storage-updated").publishMessage({
+        data: Buffer.from(message.data, "base64")
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 };

@@ -1,10 +1,10 @@
 {
   "name": "notify-live-site",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "yaml2json env.yaml >.env.json && ./node_modules/.bin/env-cmd -f ./.env.json functions-framework --target=notifyLiveSite --port=8081 --signature-type=event",
+    "start": "yaml2json env.dev.yaml >.env.json && ./node_modules/.bin/env-cmd -f ./.env.json functions-framework --target=notifyLiveSite --port=8083",
     "deploy:dev": "gcloud functions deploy notifyLiveSite --project chirpradiodev --runtime=nodejs16 --env-vars-file env.yaml --trigger-topic playlist-storage-updated",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,7 +1,8 @@
+const functions = require('@google-cloud/functions-framework');
 const axios = require('axios').default;
 const urls = process.env.urls.split("|");
 
-exports.notifyLiveSite = async function () {
+functions.cloudEvent("notifyLiveSite", async function () {
   try {
     for (const url of urls) {
       const response = await axios.get(url);
@@ -10,4 +11,4 @@ exports.notifyLiveSite = async function () {
   } catch (error) {
     console.error(error);
   }
-};
+});

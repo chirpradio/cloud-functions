@@ -15,7 +15,7 @@ const FILE_OPTIONS = {
 
 exports.updatePlaylistStorage = async function (message) {
   try {
-    const previousPlaylist = await loadJson(file);
+    const previousPlaylist = await loadJson(file); 
     const msgData = JSON.parse(Buffer.from(message.data, "base64").toString());
     const track = formatTrack(msgData.track);
     const currentPlaylist = updateNowPlaying(track, previousPlaylist);

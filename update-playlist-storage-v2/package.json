@@ -1,5 +1,5 @@
 {
-  "name": "update-playlist-storage",
+  "name": "update-playlist-storage-v2",
   "version": "1.0.0",
   "description": "Retrieve and store current playlist payload in a public Cloud Storage bucket",
   "main": "index.js",
@@ -9,25 +9,18 @@
     "start": "functions-framework --target=updateNowPlaying --port=8081",
     "deploy:dev": "gcloud functions deploy updatePlaylistStorage --project chirpradiodev --runtime=nodejs16 --env-vars-file env.dev.yaml --trigger-topic playlist-track-processed",
     "deploy": "gcloud functions deploy updatePlaylistStorage --project chirpradio-hrd --runtime=nodejs10 --trigger-http --allow-unauthenticated",
-    "test": "jest"
+    "test": "jest",
+    "lint": "npx eslint ."
   },
   "dependencies": {
-    "@google-cloud/pubsub": "^3.0.1",
-    "@google-cloud/storage": "^5.4.0",
-    "lib": "file:lib",
-    "luxon": "^2.3.1"
+    "@google-cloud/functions-framework": "^3.3.0",
+    "@google-cloud/pubsub": "^4.3.2",
+    "@google-cloud/storage": "^7.7.0",
+    "luxon": "^3.4.4"
   },
   "devDependencies": {
-    "@google-cloud/functions-framework": "^1.7.1",
-    "eslint": "^7.0.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.1.3",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
+    "eslint": "^8.56.0",
     "jest": "^27.5.1",
-    "prettier": "^2.0.5"
+    "prettier-eslint": "^16.3.0"
   }
 }

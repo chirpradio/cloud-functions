@@ -61,7 +61,7 @@ function getImageBySize(images, size) {
   return undefined;
 }
 
-async function getImagesFromLastFm(albumTitle, artistName) {
+async function getImagesFromLastFm(albumTitle, artistName) { 
   try {
     const lastFmInfo = await lastFm.albumGetInfo({
       album: albumTitle,
@@ -111,8 +111,9 @@ async function addImagesToLibraryTrack(playlistTrack, album, artist) {
   }
 }
 
-async function publishMessage(message) {  
-  const data = Buffer.from(message);  
+async function publishMessage(obj) {  
+  const jsonString = JSON.stringify(obj);
+  const data = Buffer.from(jsonString);  
   await pubsub.topic("playlist-track-processed").publishMessage({ data });
 }
 
@@ -141,10 +142,12 @@ module.exports = async function(message) {
     } catch (error) {
       console.error(error);
     } finally {
-      publishMessage(JSON.stringify({
+      publishMessage({
         action: data.action,
         track: playlistTrack,
-      }));
+      });
     }
-  }    
+  } else if (data.action === "deleted") { 
+    publishMessage(data);
+  }
 }

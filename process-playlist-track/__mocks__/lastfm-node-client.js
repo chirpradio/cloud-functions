@@ -1,2 +1,11 @@
-const lastFm = jest.createMockFromModule("lastfm-node-client");
-module.exports = lastFm;
+class LastFm {
+  constructor() {
+
+  }
+
+  async albumGetInfo() {
+
+  }
+}
+
+module.exports = LastFm;

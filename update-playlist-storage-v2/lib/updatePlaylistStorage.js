@@ -15,16 +15,17 @@ const FILE_OPTIONS = {
   },
 };
 
-module.exports = async function (message) {
-  const msgData = JSON.parse(Buffer.from(message.data, "base64").toString());
-  if (msgData.action === "added") {
+module.exports = async function (cloudEvent) {
+  const msgData = Buffer.from(cloudEvent.data.message.data, "base64");
+  const data = JSON.parse(msgData.toString());
+  if (data.action === "added") {
     try {
       const previousPlaylist = await loadJson(file); 
-      const track = formatTrack(msgData.track);
+      const track = formatTrack(data.track);
       const currentPlaylist = updateNowPlaying(track, previousPlaylist);
       await file.save(JSON.stringify(currentPlaylist), FILE_OPTIONS);
       await pubsub.topic("playlist-storage-updated").publishMessage({
-        data: Buffer.from(message.data, "base64")
+        data: msgData
       });
     } catch (error) {
       console.error(error);

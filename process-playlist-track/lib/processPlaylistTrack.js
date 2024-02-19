@@ -117,8 +117,8 @@ async function publishMessage(obj) {
   await pubsub.topic("playlist-track-processed").publishMessage({ data });
 }
 
-module.exports = async function(message) {
-  const data = JSON.parse(Buffer.from(message.data, "base64").toString());
+module.exports = async function(cloudEvent) {    
+  const data = JSON.parse(Buffer.from(cloudEvent.data.message.data, "base64").toString());
   if (data.action === "added" || data.action === "updated") {  
     const [playlistTrack] = await datastore.get(data.track.__key);    
     

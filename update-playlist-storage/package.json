@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "functions-framework --target=updatePlaylistStorage",
+    "deploy:dev": "gcloud functions deploy updatePlaylistStorage --project chirpradiodev --runtime=nodejs20 --trigger-topic update_playlist_storage --docker-registry=artifact-registry",
     "deploy": "gcloud functions deploy updatePlaylistStorage --project chirpradio-hrd --runtime=nodejs20 --trigger-topic update_playlist_storage --docker-registry=artifact-registry"
   },
   "dependencies": {

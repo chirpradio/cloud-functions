@@ -1,4 +1,4 @@
-function updateNowPlaying(track, previousPlaylist) {
+module.exports = function updateNowPlaying(track, previousPlaylist) {
   return {
     now_playing: track,
     recently_played: [
@@ -7,7 +7,3 @@ function updateNowPlaying(track, previousPlaylist) {
     ],
   };
 }
-
-module.exports = {
-  updateNowPlaying,
-};

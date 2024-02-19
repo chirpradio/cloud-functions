@@ -15,7 +15,7 @@ function isLocal(track) {
   Differences from DJDB api/current_playlist output
   - Only includes milliseconds up to three decimal points instead of six
 */
-function formatTrack(track) {
+module.exports = function formatTrack(track) {
   const gmtDate = DateTime.fromISO(track.established).toUTC(0);
   const localDate = gmtDate.setZone("America/Chicago");
   const expireDate = localDate.plus({ days: 6 * 31 }); // matches DJDB
@@ -56,7 +56,3 @@ function formatTrack(track) {
     },
   };
 }
-
-module.exports = {
-  formatTrack,
-};

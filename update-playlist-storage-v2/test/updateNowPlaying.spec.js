@@ -1,4 +1,4 @@
-const { updateNowPlaying } = require("../lib");
+const updateNowPlaying = require("../lib/updateNowPlaying");
 
 test("it updates now_playing with a full recently_played array", () => {
   const track = { id: "g" };

@@ -1,4 +1,4 @@
-const { formatTrack } = require("../lib");
+const formatTrack = require("../lib/formatTrack");
 const libraryTrack = require("./fixtures/libraryTrack");
 const libraryResult = require("./fixtures/libraryResult.json");
 const freeformTrack = require("./fixtures/freeformTrack");

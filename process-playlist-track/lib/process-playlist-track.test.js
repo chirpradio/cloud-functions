@@ -30,4 +30,18 @@ describe("sends PubSub message", () => {
     await processPlaylistTrack({ data: addedBuffer });
     expect(publishMessage).toHaveBeenCalled();
   });
+
+  test("message data has an action property", async () => {
+    await processPlaylistTrack({ data: addedBuffer });    
+    const message = publishMessage.mock.calls[0][0];
+    const json = JSON.parse(Buffer.from(message.data, "base64").toString());
+    expect(json).toHaveProperty("action");
+  });
+
+  test("message data has a track property", async () => {
+    await processPlaylistTrack({ data: addedBuffer });    
+    const message = publishMessage.mock.calls[0][0];
+    const json = JSON.parse(Buffer.from(message.data, "base64").toString());
+    expect(json).toHaveProperty("track");
+  });
 });

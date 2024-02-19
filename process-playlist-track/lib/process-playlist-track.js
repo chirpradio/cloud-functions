@@ -142,6 +142,7 @@ module.exports = async function(message) {
       console.error(error);
     } finally {
       publishMessage(JSON.stringify({
+        action: data.action,
         track: playlistTrack,
       }));
     }

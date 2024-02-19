@@ -1,7 +1,7 @@
 {
   "name": "update-playlist-storage-v2",
-  "version": "1.0.0",
-  "description": "Retrieve and store current playlist payload in a public Cloud Storage bucket",
+  "version": "2.0.0",
+  "description": "Update playlist JSON feed in a public Cloud Storage bucket",
   "main": "index.js",
   "author": "Steve Lund <lund5000@gmail.com>",
   "license": "MIT",

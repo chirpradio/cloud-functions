@@ -44,4 +44,9 @@ describe("sends PubSub message", () => {
     const json = JSON.parse(Buffer.from(message.data, "base64").toString());
     expect(json).toHaveProperty("track");
   });
+
+  test("publishes a message to the topic when a track is updated", async () => {
+    await processPlaylistTrack({ data: updatedBuffer });
+    expect(publishMessage).toHaveBeenCalled();
+  });
 });

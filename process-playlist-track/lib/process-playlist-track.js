@@ -118,7 +118,7 @@ async function publishMessage(message) {
 
 module.exports = async function(message) {
   const data = JSON.parse(Buffer.from(message.data, "base64").toString());
-  if (data.action === "added") {  
+  if (data.action === "added" || data.action === "updated") {  
     const [playlistTrack] = await datastore.get(data.track.__key);    
     
     try {        

@@ -1,7 +1,7 @@
-Fetches the output of https://chirpradio-hrd.appspot.com/api/current_playlist and copies it to a public Cloud Storage bucket to serve the same data at a lower cost.
+Updates the public playlist JSON in Cloud Storage when NextUp adds a track to the playlist
 
 # To test
-`npm run start`, then visit localhost:8080
+`npm run start`, then POST a message localhost:8082
 
 # To deploy
 `npm run deploy`

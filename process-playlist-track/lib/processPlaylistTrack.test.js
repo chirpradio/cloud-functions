@@ -1,6 +1,6 @@
 const { PubSub } = require('@google-cloud/pubsub');
 const LastFm = require('lastfm-node-client');
-const processPlaylistTrack = require("./process-playlist-track");
+const processPlaylistTrack = require("./processPlaylistTrack");
 
 function getEncodedBuffer(str) {
   return Buffer.from(str).toString("base64");

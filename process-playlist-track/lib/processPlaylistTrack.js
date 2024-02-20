@@ -1,4 +1,4 @@
-const { Datastore } = require('@google-cloud/datastore');
+const { Datastore } = require("@google-cloud/datastore");
 const datastore = new Datastore();
 
 const LastFm = require("lastfm-node-client");
@@ -9,11 +9,11 @@ const pubsub = new PubSub();
 
 async function getAlbum(key) {
   const [album] = await datastore.get(key, {
-		wrapNumbers: {
-			integerTypeCastFunction: datastore.int,
-			properties: ["album_id"],
-		}
-	});
+    wrapNumbers: {
+      integerTypeCastFunction: datastore.int,
+      properties: ["album_id"],
+    },
+  });
   return album;
 }
 
@@ -44,7 +44,7 @@ function getImagesFromAlbum(album) {
       small: album.lastfm_sm_image_url,
       medium: album.lastfm_med_image_url,
       large: album.lastfm_lg_image_url,
-    }
+    };
   }
 
   return undefined;
@@ -53,15 +53,15 @@ function getImagesFromAlbum(album) {
 function getImageBySize(images, size) {
   if (Array.isArray(images)) {
     const image = images.find((image) => image.size === size);
-    if (image) {      
+    if (image) {
       return image["#text"];
     }
   }
-	
+
   return undefined;
 }
 
-async function getImagesFromLastFm(albumTitle, artistName) { 
+async function getImagesFromLastFm(albumTitle, artistName) {
   try {
     const lastFmInfo = await lastFm.albumGetInfo({
       album: albumTitle,
@@ -73,7 +73,7 @@ async function getImagesFromLastFm(albumTitle, artistName) {
       lastFmInfo.album &&
       lastFmInfo.album.image &&
       lastFmInfo.album.image.length > 0
-    ) {      
+    ) {
       const images = lastFmInfo.album.image;
       return {
         small: getImageBySize(images, "small"),
@@ -81,21 +81,24 @@ async function getImagesFromLastFm(albumTitle, artistName) {
         large: getImageBySize(images, "large"),
       };
     }
-  } catch (error) {    
+  } catch (error) {
     return undefined;
   }
-} 
+}
 
 async function addImages(images, playlistTrack) {
   playlistTrack.lastfm_url_sm_image = images.small;
   playlistTrack.lastfm_url_med_image = images.medium;
   playlistTrack.lastfm_url_large_image = images.large;
-  playlistTrack.lastfm_urls_processed = true;  
+  playlistTrack.lastfm_urls_processed = true;
   await datastore.save(playlistTrack);
 }
 
 async function addImagesToFreeformTrack(playlistTrack) {
-  const images = await getImagesFromLastFm(playlistTrack.freeform_album_title, playlistTrack.freeform_artist_name);  
+  const images = await getImagesFromLastFm(
+    playlistTrack.freeform_album_title,
+    playlistTrack.freeform_artist_name,
+  );
   if (images) {
     await addImages(images, playlistTrack);
   }
@@ -104,25 +107,27 @@ async function addImagesToFreeformTrack(playlistTrack) {
 async function addImagesToLibraryTrack(playlistTrack, album, artist) {
   let images = getImagesFromAlbum(album);
   if (!images) {
-    images = await getImagesFromLastFm(album.title, artist.name); 
+    images = await getImagesFromLastFm(album.title, artist.name);
   }
   if (images) {
     await addImages(images, playlistTrack);
   }
 }
 
-async function publishMessage(obj) {  
+async function publishMessage(obj) {
   const jsonString = JSON.stringify(obj);
-  const data = Buffer.from(jsonString);  
+  const data = Buffer.from(jsonString);
   await pubsub.topic("playlist-track-processed").publishMessage({ data });
 }
 
-module.exports = async function(cloudEvent) {    
-  const data = JSON.parse(Buffer.from(cloudEvent.data.message.data, "base64").toString());
-  if (data.action === "added" || data.action === "updated") {  
-    const [playlistTrack] = await datastore.get(data.track.__key);    
-    
-    try {        
+module.exports = async function (cloudEvent) {
+  const data = JSON.parse(
+    Buffer.from(cloudEvent.data.message.data, "base64").toString(),
+  );
+  if (data.action === "added" || data.action === "updated") {
+    const [playlistTrack] = await datastore.get(data.track.__key);
+
+    try {
       if (typeof playlistTrack.freeform_track_title === "string") {
         await addImagesToFreeformTrack(playlistTrack);
       } else {
@@ -147,7 +152,7 @@ module.exports = async function(cloudEvent) {
         track: playlistTrack,
       });
     }
-  } else if (data.action === "deleted") { 
+  } else if (data.action === "deleted") {
     publishMessage(data);
   }
-}
+};

@@ -1,11 +1,7 @@
 class LastFm {
-  constructor() {
+  constructor() {}
 
-  }
-
-  async albumGetInfo() {
-
-  }
+  async albumGetInfo() {}
 }
 
 module.exports = LastFm;

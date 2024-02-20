@@ -1,15 +1,13 @@
 const ds = jest.createMockFromModule("@google-cloud/datastore");
 
 class Datastore {
-  constructor() {
+  constructor() {}
 
-  }
-
-  async get(key, args) {
+  async get() {
     return Promise.resolve([{}]);
   }
 
-  async keyToLegacyUrlSafe(key, prefix) {
+  async keyToLegacyUrlSafe() {
     return Promise.resolve("");
   }
 }

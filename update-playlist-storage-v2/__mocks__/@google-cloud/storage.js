@@ -1,9 +1,7 @@
 const storage = jest.createMockFromModule("@google-cloud/storage");
 
 class File {
-  constructor() {
-
-  }
+  constructor() {}
 
   exists() {
     return [true];
@@ -17,15 +15,11 @@ class File {
     return [Buffer.from(jsonStr)];
   }
 
-  async save() {
-    
-  }
+  async save() {}
 }
 
 class Bucket {
-  constructor() {
-
-  }
+  constructor() {}
 
   file() {
     return new File();
@@ -33,9 +27,7 @@ class Bucket {
 }
 
 class Storage {
-  constructor() {
-
-  }
+  constructor() {}
 
   bucket() {
     return new Bucket();

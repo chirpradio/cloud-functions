@@ -1,19 +1,13 @@
 const pubsub = jest.createMockFromModule("@google-cloud/pubsub");
 
 class Topic {
-  constructor() {
-    
-  }
+  constructor() {}
 
-  publishMessage() {
-    
-  }
+  publishMessage() {}
 }
 
 class PubSub {
-  constructor() {
-
-  }
+  constructor() {}
 
   topic() {
     return new Topic();

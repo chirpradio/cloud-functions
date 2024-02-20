@@ -31,7 +31,7 @@ module.exports = function formatTrack(track) {
     localDate.hour,
     localDate.minute,
     localDate.second,
-    localDate.millisecond
+    localDate.millisecond,
   );
 
   return {
@@ -55,4 +55,4 @@ module.exports = function formatTrack(track) {
       large_image: track.lastfm_url_large_image,
     },
   };
-}
+};

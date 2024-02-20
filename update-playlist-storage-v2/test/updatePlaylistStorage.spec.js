@@ -1,4 +1,4 @@
-const { PubSub } = require('@google-cloud/pubsub');
+const { PubSub } = require("@google-cloud/pubsub");
 const updatePlaylistStorage = require("../lib/updatePlaylistStorage");
 const libraryTrack = require("./fixtures/libraryTrack");
 
@@ -10,23 +10,28 @@ function getCloudEvent(data) {
   return {
     data: {
       message: {
-        data
-      }
-    }
-  }
+        data,
+      },
+    },
+  };
 }
 
-const addedBuffer = getEncodedBuffer(`{"action":"added", "track": ${JSON.stringify(libraryTrack)}}`);
-const updatedBuffer = getEncodedBuffer(`{"action":"updated", "track": ${JSON.stringify(libraryTrack)}}`);
-const deletedBuffer = getEncodedBuffer(`{"action":"deleted", "track": ${JSON.stringify(libraryTrack)}}`);
-
+const addedBuffer = getEncodedBuffer(
+  `{"action":"added", "track": ${JSON.stringify(libraryTrack)}}`,
+);
+const updatedBuffer = getEncodedBuffer(
+  `{"action":"updated", "track": ${JSON.stringify(libraryTrack)}}`,
+);
+const deletedBuffer = getEncodedBuffer(
+  `{"action":"deleted", "track": ${JSON.stringify(libraryTrack)}}`,
+);
 
 describe.only("sends PubSub message", () => {
   const publishMessage = jest.fn();
   const topic = jest.spyOn(PubSub.prototype, "topic").mockImplementation(() => {
     return {
-      publishMessage
-    };  
+      publishMessage,
+    };
   });
 
   beforeEach(() => {

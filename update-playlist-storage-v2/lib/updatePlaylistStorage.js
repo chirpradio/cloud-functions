@@ -20,12 +20,12 @@ module.exports = async function (cloudEvent) {
   const data = JSON.parse(msgData.toString());
   if (data.action === "added") {
     try {
-      const previousPlaylist = await loadJson(file); 
+      const previousPlaylist = await loadJson(file);
       const track = formatTrack(data.track);
       const currentPlaylist = updateNowPlaying(track, previousPlaylist);
       await file.save(JSON.stringify(currentPlaylist), FILE_OPTIONS);
       await pubsub.topic("playlist-storage-updated").publishMessage({
-        data: msgData
+        data: msgData,
       });
     } catch (error) {
       console.error(error);

@@ -6,4 +6,4 @@ module.exports = function updateNowPlaying(track, previousPlaylist) {
       ...previousPlaylist.recently_played.slice(0, 4),
     ],
   };
-}
+};

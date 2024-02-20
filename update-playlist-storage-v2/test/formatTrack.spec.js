@@ -10,13 +10,19 @@ function createTableTest(track, result) {
   return () => {
     const formatted = formatTrack(track);
     const results = Object.entries(result);
-  
+
     test.each(results)("%s equals %p", (key, value) => {
       expect(formatted[key]).toEqual(value);
     });
-  }
+  };
 }
 
 describe("For a library track", createTableTest(libraryTrack, libraryResult));
-describe("For a freeform track", createTableTest(freeformTrack, freeformResult));
-describe("For a library track without images", createTableTest(noImagesTrack, noImagesResult));
+describe(
+  "For a freeform track",
+  createTableTest(freeformTrack, freeformResult),
+);
+describe(
+  "For a library track without images",
+  createTableTest(noImagesTrack, noImagesResult),
+);

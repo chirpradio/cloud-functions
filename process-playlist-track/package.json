@@ -6,7 +6,8 @@
   "scripts": {
     "start": "yaml2json env.yaml >.env.json && ./node_modules/.bin/env-cmd -f ./.env.json functions-framework --target=processPlaylistTrack --port=8081",
     "deploy:dev": "gcloud functions deploy processPlaylistTrack --project chirpradiodev --gen2 --runtime=nodejs20 --env-vars-file env.yaml --trigger-topic playlist-event --docker-registry=artifact-registry",
-    "test": "jest"
+    "test": "jest",
+    "lint": "npx eslint . --fix && npx prettier . --write"
   },
   "author": "",
   "license": "ISC",
@@ -16,9 +17,12 @@
     "@google-cloud/pubsub": "^4.3.2",
     "lastfm-node-client": "^2.2.0"
   },
-  "devDependencies": {    
+  "devDependencies": {
     "env-cmd": "^10.1.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
     "jest": "^27.5.1",
+    "prettier": "3.2.5",
     "yaml2json": "^1.0.2"
   }
 }

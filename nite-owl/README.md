@@ -3,15 +3,7 @@ Listens for now playing events emitted by StationPlaylist and calls the NextUp A
 To deploy to Google Cloud, the following command can be used:
 
 ```
-gcloud functions deploy nodejs-http-function \
---gen2 \
---runtime=nodejs20 \
---region=us-central1 \
---source=. \
---entry-point=createPlaylistEvent \
---trigger-http \
---allow-unauthenticated \
---env-vars-file=env.dev.yaml
+npm run deploy:dev
 ```
 
 Note this uses the `--allow-unauthenticated` flag which should not be used in production.

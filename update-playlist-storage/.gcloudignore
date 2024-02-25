@@ -14,3 +14,6 @@
 .gitignore
 
 node_modules
+test
+__mocks__
+env.yaml

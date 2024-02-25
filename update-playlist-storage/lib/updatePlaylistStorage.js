@@ -1,3 +1,7 @@
+/*
+  Update public playlist JSON based on a PubSub event from the
+  NextUp playlist pipeline: https://chirpradio.github.io/nextup/#playlist-pipeline
+*/
 const formatTrack = require("./formatTrack");
 const loadJson = require("./loadJson");
 const updateNowPlaying = require("./updateNowPlaying");

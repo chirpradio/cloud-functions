@@ -1,0 +1,35 @@
+module.exports = {
+  lastfm_url_med_image:
+    "https://lastfm.freetls.fastly.net/i/u/64s/06bebe450fe970c646e22df91c11520a.jpg",
+  track: null,
+  lastfm_urls_processed: true,
+  track_number: 1,
+  modified: "2022-04-03T17:07:13.713Z",
+  artist: null,
+  album: null,
+  notes: null,
+  class: ["PlaylistEvent", "PlaylistTrack"],
+  established: "2022-04-03T17:07:10.645Z",
+  playlist: { id: "24001", kind: "Playlist", path: ["Playlist", "24001"] },
+  freeform_album_title: "Hot Butterfly",
+  lastfm_url_large_image:
+    "https://lastfm.freetls.fastly.net/i/u/174s/06bebe450fe970c646e22df91c11520a.jpg",
+  selector: {
+    roles: ["dj"],
+    is_superuser: false,
+    is_active: true,
+    last_name: "McAllister",
+    first_name: "Sam",
+    last_login: "2022-04-03T16:51:13.883Z",
+    email: "smmcllstr@gmail.com",
+    dj_name: "Don't Turn Away presented by Sam McAllister",
+    external_id: 1374,
+    date_joined: "2013-06-25T18:30:12.730Z",
+  },
+  lastfm_url_sm_image:
+    "https://lastfm.freetls.fastly.net/i/u/34s/06bebe450fe970c646e22df91c11520a.jpg",
+  freeform_track_title: "Hot Butterfly",
+  freeform_label: "Polydor",
+  freeform_artist_name: "Bionic Boogie",
+  id: "ahBzfmNoaXJwcmFkaW8taHJkchoLEg1QbGF5bGlzdEV2ZW50GICAoL2Dt6UKDA",
+};

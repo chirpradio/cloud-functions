@@ -45,6 +45,12 @@ async function addFreeformPlaylistTrack(data) {
 }
 
 module.exports = async function (req, res) {
+  if (req.query.title === "_STOP") {
+    // StationPlaylist sends a predefined value when stopping the automation,
+    // in this case do not perform any actions
+    res.status(204).send("");
+    return;
+  }
   await login(req.query.user, req.query.password);
   const data = JSON.stringify({
     artist: {
@@ -58,7 +64,7 @@ module.exports = async function (req, res) {
       title: req.query.title,
     },
     categories: [],
-    notes: "Nite Owl",
+    notes: "Music Mix",
   });
   const result = await addFreeformPlaylistTrack(data);
   res.send(JSON.stringify(result));

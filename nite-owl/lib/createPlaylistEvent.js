@@ -5,12 +5,6 @@ const instance = axios.create({
   baseURL: process.env.API_URL,
 });
 
-const userTokens = [];
-
-function setAuthorizationHeader(token) {
-  instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-}
-
 instance.interceptors.response.use(
   (response) => {
     return response;
@@ -22,36 +16,26 @@ instance.interceptors.response.use(
   }
 );
 
-async function login(email, password) {
-  if (!userTokens[email]) {
-    const response = await instance.post("/token", {
-      email,
-      password,
-    });
-
-    if (response.data.token) {
-      setAuthorizationHeader(response.data.token);
-    }
-    userTokens[email] = response.data;
-  }
-  return userTokens[email];
-}
-
-async function addFreeformPlaylistTrack(data) {
-  const response = await instance.post("/playlist/freeform", data, {
+async function addFreeformPlaylistTrack(data, api_key) {
+  const response = await instance.post(`/playlist/freeform`, data, {
     headers: { "Content-Type": "application/json" },
+    params: {
+      api_key: api_key,
+    },
   });
   return response.data;
 }
 
 module.exports = async function (req, res) {
+  if (!req.query.api_key) {
+    res.status(401).send("");
+  }
   if (req.query.title === "_STOP") {
     // StationPlaylist sends a predefined value when stopping the automation,
     // in this case do not perform any actions
     res.status(204).send("");
     return;
   }
-  await login(req.query.user, req.query.password);
   const data = JSON.stringify({
     artist: {
       name: req.query.artist,
@@ -66,6 +50,6 @@ module.exports = async function (req, res) {
     categories: [],
     notes: "Music Mix",
   });
-  const result = await addFreeformPlaylistTrack(data);
+  const result = await addFreeformPlaylistTrack(data, req.query.api_key);
   res.send(JSON.stringify(result));
 };

@@ -11,5 +11,5 @@ Note this uses the `--allow-unauthenticated` flag which should not be used in pr
 The resulting request URL can then be input into StationPlaylist with corresponding query template. It should take the following form:
 
 ```
-<cloud-function-url>?user=<nite-owl-user>&password=<nite-owl-password>&artist=%A&title=%t&album=%T&file=%f&label=%L
+<cloud-function-url>?api_key<nite-owl-api-key>&artist=%A&title=%t&album=%T&file=%f&label=%L
 ```

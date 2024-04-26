@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy:dev": "gcloud functions deploy handleAutomationPlaylistEvent --gen2 --runtime=nodejs20 --region=us-central1 --source=. --entry-point=createPlaylistEvent --trigger-http --allow-unauthenticated --env-vars-file=env.dev.yaml",
     "undeploy:dev": "gcloud functions delete handleAutomationPlaylistEvent --gen2 --region=us-central1",
-    "start": "npx functions-framework --target=createPlaylistEvent"
+    "start": "npx functions-framework --target=createPlaylistEvent",
+    "dev": "nodemon --inspect node_modules/.bin/functions-framework --target=createPlaylistEvent"
   },
   "author": "Brian McDonnell <bmcdonn2@gmail.com>",
   "license": "MIT",
@@ -18,6 +19,7 @@
   "devDependencies": {
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
+    "nodemon": "^3.1.0",
     "prettier": "^3.2.5"
   }
 }

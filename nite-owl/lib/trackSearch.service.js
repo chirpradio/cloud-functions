@@ -3,6 +3,7 @@ const util = require("util");
 
 const DURATION_TOLERANCE_MS = 30000;
 const CLEAN_REGEX = /\W{2}clean\W?/gi;
+const FEATURING_REGEX = /\W[([](featuring|ft|feat).+[)\]]$/gi;
 
 function prepareDurationParams(durationSeconds) {
   const durationMs = durationSeconds * 1000;
@@ -12,17 +13,18 @@ function prepareDurationParams(durationSeconds) {
   return params;
 }
 
-// function getSearchTermModifier(regex) {
-//   (searchTerm) => {
-//     const index = searchTerm.search(regex);
-//     if (index > 0) {
-//       return searchTerm.slice(0, index);
-//     }
-//     return searchTerm;
-//   };
-// }
+function getSearchTermTransformer(regex) {
+  return (searchTerm) => {
+    const index = searchTerm.search(regex);
+    if (index > 0) {
+      return searchTerm.slice(0, index);
+    }
+    return searchTerm;
+  };
+}
 
-// const cleanModifier = getSearchTermModifier(CLEAN_REGEX);
+const cleanTransformer = getSearchTermTransformer(CLEAN_REGEX);
+const featuringTransformer = getSearchTermTransformer(FEATURING_REGEX);
 
 function getTrackLocator(durationParams) {
   return async (searchTerm) => {
@@ -32,7 +34,7 @@ function getTrackLocator(durationParams) {
       type: "track",
       ...durationParams,
     };
-    console.debug(`Query params: ${util.inspect(params)}`);
+    // console.debug(`Query params: ${util.inspect(params)}`);
     const searchResults = await nextup.search(params);
     const candidates = searchResults.hits.map((hit) => {
       return {
@@ -59,26 +61,19 @@ module.exports = {
     if (rawCandidates.length > 0) {
       return rawCandidates;
     }
-    let searchTerm = trackTitle;
-    const cleanRegex = /\W{2}clean\W?/gi;
-    const cleanIndex = trackTitle.search(cleanRegex);
-    if (cleanIndex > 0) {
-      searchTerm = trackTitle.slice(0, cleanIndex);
-      const cleanCandidates = await trackLocator(searchTerm);
-      if (cleanCandidates.length > 0) {
-        return cleanCandidates;
-      }
-    }
-    const featuringRegex = /\W[([](featuring|ft|feat).+[)\]]$/gi;
-    const featuringIndex = searchTerm.search(featuringRegex);
-    if (featuringIndex > 0) {
-      searchTerm = searchTerm.slice(0, featuringIndex);
-      const featuringCandidates = await trackLocator(searchTerm);
-      if (featuringCandidates.length > 0) {
-        return featuringCandidates;
-      }
-    }
-    const titleTerms = searchTerm.split(" ");
+    // const cleanTerm = cleanTransformer(trackTitle);
+    // const cleanCandidates = await trackLocator(cleanTerm);
+    // if (cleanCandidates.length > 0) {
+    //   return cleanCandidates;
+    // }
+
+    // const featuringTerm = featuringTransformer(cleanTerm);
+    // const featuringCandidates = await trackLocator(featuringTerm);
+    // if (featuringCandidates.length > 0) {
+    //   return featuringCandidates;
+    // }
+
+    const titleTerms = trackTitle.split(" ");
     for (let i = 1; i < titleTerms.length; i++) {
       const offset = 0 - i;
       const currentTerms = titleTerms.slice(0, offset);

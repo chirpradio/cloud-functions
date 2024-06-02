@@ -1,5 +1,8 @@
 const nextup = require("./nextup.service");
 const util = require("util");
+const { Logging } = require("@google-cloud/logging");
+const logging = new Logging();
+const log = logging.logSync("trackSearch");
 
 const DURATION_TOLERANCE_MS = 30000;
 
@@ -8,19 +11,18 @@ function prepareDurationParams(durationSeconds) {
   let params = {};
   params["track[duration_ms][gte]"] = durationMs - DURATION_TOLERANCE_MS;
   params["track[duration_ms][lte]"] = durationMs + DURATION_TOLERANCE_MS;
-  console.debug(`Duration params: ${util.inspect(params)}`);
+  log.debug(log.entry(`Duration params: ${util.inspect(params)}`));
   return params;
 }
 
 function getTrackLocator(durationParams) {
   return async (searchTerm) => {
-    console.debug(`Search using term: ${searchTerm}`);
+    log.debug(log.entry(`Search using term: ${searchTerm}`));
     let params = {
       term: searchTerm,
       type: "track",
       ...durationParams,
     };
-    // console.debug(`Query params: ${util.inspect(params)}`);
     const searchResults = await nextup.search(params);
     const candidates = searchResults.hits.map((hit) => {
       return {

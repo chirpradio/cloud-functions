@@ -1,5 +1,9 @@
 const axios = require("axios").default;
 const util = require("util");
+// const log = require("./logging").getLogger("nextUp")();
+const { Logging } = require("@google-cloud/logging");
+const logging = new Logging();
+const log = logging.logSync("trackSearch");
 
 const instance = axios.create({
   baseURL: process.env.API_URL,
@@ -10,8 +14,8 @@ instance.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(util.inspect(error));
-    console.log(error.response.data);
+    log.error(log.entry(util.inspect(error)));
+    log.error(log.entry(error.response.data));
     return Promise.reject(error);
   }
 );

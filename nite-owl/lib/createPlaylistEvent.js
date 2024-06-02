@@ -1,6 +1,9 @@
 const util = require("util");
 const nextup = require("./nextup.service");
 const trackSearch = require("./trackSearch.service");
+// const logging = require("./logging").getLogger("createPlaylistEvent");
+const { Logging } = require("@google-cloud/logging");
+const logging = new Logging();
 
 const AUTOMATION_USER_ID = "5820844800999424";
 const DJ_PLAY_COOLDOWN_MINUTES = 20;
@@ -19,6 +22,9 @@ async function getMostRecentPlays() {
 }
 
 module.exports = async function (req, res) {
+  await logging.setProjectId();
+  await logging.setDetectedResource();
+  const log = logging.logSync("createPlaylistEvent");
   if (!req.query.api_key) {
     res.status(401).send("");
   }
@@ -34,11 +40,13 @@ module.exports = async function (req, res) {
   }
   if (!req.query.artist && !req.query["album_artist"]) {
     res.status(204).send("");
-    console.warn(`No artist included for request ${JSON.stringify(req.query)}`);
+    log.warning(
+      log.entry(`No artist included for request ${JSON.stringify(req.query)}`)
+    );
     return;
   }
 
-  console.debug(util.inspect(req.query));
+  log.debug(log.entry(util.inspect(req.query)));
   nextup.setApiKey(req.query.api_key);
 
   const recentPlays = await getMostRecentPlays();
@@ -46,7 +54,7 @@ module.exports = async function (req, res) {
     (playlistEvent) => playlistEvent.selector.id !== AUTOMATION_USER_ID
   );
   if (djPlay !== undefined && djPlay !== null) {
-    console.debug(`Recent play by DJ: ${util.inspect(djPlay.selector)}`);
+    log.debug(log.entry(`Recent play by DJ: ${util.inspect(djPlay.selector)}`));
     res.status(204).send("");
     return;
   }
@@ -56,14 +64,16 @@ module.exports = async function (req, res) {
     req.query.duration
   );
 
-  console.debug(
-    `Artist albums: ${util.inspect(searchResults.map((result) => `${result.trackNumber} ${result.artist} - ${result.title} (${result.year})`))}`
+  log.debug(
+    log.entry(
+      `Artist albums: ${util.inspect(searchResults.map((result) => `${result.trackNumber} ${result.artist} - ${result.title} (${result.year})`))}`
+    )
   );
   const targetArtist = req.query.artist
     ? req.query.artist
     : req.query["album_artist"];
 
-  console.log(`Target artist: ${targetArtist}`);
+  log.debug(log.entry(`Target artist: ${targetArtist}`));
   const targetTrack = searchResults.find(
     (result) =>
       result.artist.toLowerCase() === targetArtist.toLowerCase() ||

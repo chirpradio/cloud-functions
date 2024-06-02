@@ -32,8 +32,9 @@ module.exports = async function (req, res) {
     res.status(204).send("");
     return;
   }
-  if (req.query.artist === null || req.query.artist === undefined) {
+  if (!req.query.artist && !req.query["album_artist"]) {
     res.status(204).send("");
+    console.warn(`No artist included for request ${JSON.stringify(req.query)}`);
     return;
   }
 
@@ -55,10 +56,17 @@ module.exports = async function (req, res) {
     req.query.duration
   );
 
-  console.debug(`Artist albums: ${util.inspect(searchResults)}`);
+  console.debug(
+    `Artist albums: ${util.inspect(searchResults.map((result) => `${result.trackNumber} ${result.artist} - ${result.title} (${result.year})`))}`
+  );
+  const targetArtist = req.query.artist
+    ? req.query.artist
+    : req.query["album_artist"];
+
+  console.log(`Target artist: ${targetArtist}`);
   const targetTrack = searchResults.find(
     (result) =>
-      result.artist.toLowerCase() === req.query.artist.toLowerCase() ||
+      result.artist.toLowerCase() === targetArtist.toLowerCase() ||
       result.album.toLowerCase() === req.query.album.toLowerCase()
   ) ?? {
     artist: req.query.artist,
@@ -79,7 +87,6 @@ module.exports = async function (req, res) {
       title: targetTrack.title,
     },
     categories: targetTrack.currentTags ?? [],
-    notes: "Music Mix",
   };
   const result = await nextup.addPlaylistEvent(
     JSON.stringify(capturedPlaylistEvent)

@@ -32,7 +32,7 @@ function getTrackLocator(durationParams) {
         album: hit._source.album.title,
         albumYear: hit._source.album.year,
         label: hit._source.album.label,
-        currentTags: hit._source.album.album_artist?.current_tags,
+        currentTags: hit._source.album.current_tags,
         title: hit._source.title,
         year: hit._source.album.year,
         trackNumber: hit._source.track_num,

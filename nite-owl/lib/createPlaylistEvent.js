@@ -5,8 +5,8 @@ const trackSearch = require("./trackSearch.service");
 const { Logging } = require("@google-cloud/logging");
 const logging = new Logging();
 
-const AUTOMATION_USER_ID = "5820844800999424";
-const DJ_PLAY_COOLDOWN_MINUTES = 20;
+const AUTOMATION_USER_ID = process.env.AUTOMATION_USER_ID ?? "5820844800999424";
+const DJ_PLAY_COOLDOWN_MINUTES = process.env.DJ_PLAY_COOLDOWN_MINUTES ?? 20;
 
 function getXMinutesPrevious(x) {
   const date = new Date();
@@ -25,19 +25,24 @@ module.exports = async function (req, res) {
   await logging.setProjectId();
   await logging.setDetectedResource();
   const log = logging.logSync("createPlaylistEvent");
+
   if (!req.query.api_key) {
     res.status(401).send("");
+    return;
   }
+
   if (req.query.title === "_STOP") {
     // StationPlaylist sends a predefined value when stopping the automation,
     // in this case do not perform any actions
     res.status(204).send("");
     return;
   }
+
   if (req.query.artist === "Live" && req.query.title === "Default User") {
     res.status(204).send("");
     return;
   }
+
   if (!req.query.artist && !req.query["album_artist"]) {
     res.status(204).send("");
     log.warning(

@@ -4,6 +4,7 @@ jest.mock("./nextup.service");
 
 afterEach(() => {
   nextup.addPlaylistEvent.mockClear();
+  nextup.getPlaylist.mockClear();
 });
 
 const referenceDate = new Date("2024-07-15 12:00:00");
@@ -11,8 +12,8 @@ const referenceDate = new Date("2024-07-15 12:00:00");
 jest.useFakeTimers().setSystemTime(referenceDate);
 
 describe("Test recent playlist lookups", () => {
+  nextup.getPlaylist.mockReturnValue([]);
   test("Expect default search of past 20 minutes", async () => {
-    nextup.getPlaylist.mockReturnValue({});
     playlistService.getMostRecentPlays();
     const expectedDate = new Date();
     expectedDate.setMinutes(expectedDate.getMinutes() - 20);
@@ -22,13 +23,36 @@ describe("Test recent playlist lookups", () => {
   });
 
   test("Execute search using input value of 15 minutes", async () => {
-    nextup.getPlaylist.mockReturnValue({});
     playlistService.getMostRecentPlays(15);
     const expectedDate = new Date();
     expectedDate.setMinutes(expectedDate.getMinutes() - 15);
     expect(nextup.getPlaylist).toHaveBeenCalledWith({
       start: expectedDate.valueOf(),
     });
+  });
+
+  test("Ensure non-DJ selected events are filtered out", async () => {
+    nextup.getPlaylist.mockReturnValue([
+      {
+        selector: {
+          id: "63471",
+          dj_name: "Real Human Bean",
+        },
+        artist: {
+          name: "College",
+        },
+        track: {
+          title: "A Real Hero",
+        },
+      },
+      {
+        selector: null,
+        track: null,
+        artist: null,
+      },
+    ]);
+    const recentPlays = await playlistService.getMostRecentPlays();
+    expect(recentPlays.length).toBe(1);
   });
 });
 
@@ -39,8 +63,8 @@ describe("Test adding a playlist event", () => {
     label: "Hyberdub",
     title: "Everyday of my Life",
   };
+  nextup.addPlaylistEvent.mockReturnValue({});
   test("Test base mapping of target track to playlist event input", async () => {
-    nextup.addPlaylistEvent.mockReturnValue({});
     playlistService.addPlaylistEvent(
       Object.assign(playListInput, { currentTags: ["local_classic"] })
     );
@@ -55,7 +79,6 @@ describe("Test adding a playlist event", () => {
   });
 
   test("Test that only valid categories are passed to nextup", async () => {
-    nextup.addPlaylistEvent.mockReturnValue({});
     playlistService.addPlaylistEvent(
       Object.assign(playListInput, {
         currentTags: ["local_classic", "clean", "remaster"],
@@ -72,7 +95,6 @@ describe("Test adding a playlist event", () => {
   });
 
   test("Test when tags are not included on track", async () => {
-    nextup.addPlaylistEvent.mockReturnValue({});
     playlistService.addPlaylistEvent(
       Object.assign(playListInput, {
         currentTags: null,

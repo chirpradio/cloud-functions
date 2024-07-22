@@ -8,19 +8,6 @@ const logging = new Logging();
 
 const AUTOMATION_USER_ID = process.env.AUTOMATION_USER_ID ?? "5820844800999424";
 
-// function getXMinutesPrevious(x) {
-//   const date = new Date();
-//   date.setMinutes(date.getMinutes() - x);
-//   return date.valueOf();
-// }
-
-// async function getMostRecentPlays() {
-//   const params = {
-//     start: getXMinutesPrevious(DJ_PLAY_COOLDOWN_MINUTES),
-//   };
-//   return nextup.getPlaylist(params);
-// }
-
 module.exports = async function (req, res) {
   await logging.setProjectId();
   await logging.setDetectedResource();

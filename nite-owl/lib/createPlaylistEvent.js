@@ -1,25 +1,25 @@
 const util = require("util");
 const nextup = require("./nextup.service");
 const trackSearch = require("./trackSearch.service");
+const playlistService = require("./playlist.service");
 // const logging = require("./logging").getLogger("createPlaylistEvent");
 const { Logging } = require("@google-cloud/logging");
 const logging = new Logging();
 
 const AUTOMATION_USER_ID = process.env.AUTOMATION_USER_ID ?? "5820844800999424";
-const DJ_PLAY_COOLDOWN_MINUTES = process.env.DJ_PLAY_COOLDOWN_MINUTES ?? 20;
 
-function getXMinutesPrevious(x) {
-  const date = new Date();
-  date.setMinutes(date.getMinutes() - x);
-  return date.valueOf();
-}
+// function getXMinutesPrevious(x) {
+//   const date = new Date();
+//   date.setMinutes(date.getMinutes() - x);
+//   return date.valueOf();
+// }
 
-async function getMostRecentPlays() {
-  const params = {
-    start: getXMinutesPrevious(DJ_PLAY_COOLDOWN_MINUTES),
-  };
-  return nextup.getPlaylist(params);
-}
+// async function getMostRecentPlays() {
+//   const params = {
+//     start: getXMinutesPrevious(DJ_PLAY_COOLDOWN_MINUTES),
+//   };
+//   return nextup.getPlaylist(params);
+// }
 
 module.exports = async function (req, res) {
   await logging.setProjectId();
@@ -54,7 +54,8 @@ module.exports = async function (req, res) {
   log.debug(log.entry(util.inspect(req.query)));
   nextup.setApiKey(req.query.api_key);
 
-  const recentPlays = await getMostRecentPlays();
+  const recentPlays = await playlistService.getMostRecentPlays();
+  // const recentPlays = await getMostRecentPlays();
   const djPlay = recentPlays.find(
     (playlistEvent) => playlistEvent.selector.id !== AUTOMATION_USER_ID
   );
@@ -90,21 +91,7 @@ module.exports = async function (req, res) {
     title: req.query.title,
   };
 
-  const capturedPlaylistEvent = {
-    artist: {
-      name: targetTrack.artist,
-    },
-    album: {
-      title: targetTrack.album,
-      label: targetTrack.label,
-    },
-    track: {
-      title: targetTrack.title,
-    },
-    categories: targetTrack.currentTags ?? [],
-  };
-  const result = await nextup.addPlaylistEvent(
-    JSON.stringify(capturedPlaylistEvent)
-  );
+  const result = await playlistService.addPlaylistEvent(targetTrack);
+
   res.send(result);
 };

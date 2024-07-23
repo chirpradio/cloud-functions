@@ -18,9 +18,9 @@ async function getMostRecentPlays(pastMinutes = DJ_PLAY_COOLDOWN_MINUTES) {
   const params = {
     start: getXMinutesPrevious(pastMinutes),
   };
-  return nextup
-    .getPlaylist(params)
-    .filter((playlistEvent) => playlistEvent.selector !== null);
+  return (await nextup.getPlaylist(params)).filter(
+    (playlistEvent) => playlistEvent.selector !== null
+  );
 }
 
 async function addPlaylistEvent(targetTrack) {

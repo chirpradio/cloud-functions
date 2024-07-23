@@ -2,7 +2,7 @@ const nextup = require("./nextup.service");
 const trackSearch = require("./trackSearch.service");
 jest.mock("./nextup.service");
 
-afterEach(() => {
+beforeEach(() => {
   nextup.search.mockClear();
 });
 

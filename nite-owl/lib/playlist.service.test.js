@@ -2,13 +2,17 @@ const nextup = require("./nextup.service");
 const playlistService = require("./playlist.service");
 jest.mock("./nextup.service");
 
+const referenceDate = new Date("2024-07-15 12:00:00");
+
 beforeEach(() => {
   jest.useFakeTimers().setSystemTime(referenceDate);
   nextup.addPlaylistEvent.mockClear();
   nextup.getPlaylist.mockClear();
 });
 
-const referenceDate = new Date("2024-07-15 12:00:00");
+afterEach(() => {
+  jest.useRealTimers();
+});
 
 describe("Test recent playlist lookups", () => {
   nextup.getPlaylist.mockReturnValue([]);

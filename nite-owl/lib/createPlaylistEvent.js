@@ -13,7 +13,7 @@ async function execute(req) {
   const log = logging.logSync("createPlaylistEvent");
 
   if (!req.query.api_key) {
-    return { status: 401, body: { msg: "No API Included with Request" } };
+    return { status: 401, body: { msg: "No API Key Included with Request" } };
   }
 
   if (req.query.title === "_STOP") {
@@ -30,22 +30,43 @@ async function execute(req) {
     log.warning(
       log.entry(`No artist included for request ${JSON.stringify(req.query)}`)
     );
+
     return { status: 400, body: { msg: "No artist included in request" } };
   }
 
   log.debug(log.entry(util.inspect(req.query)));
   nextup.setApiKey(req.query.api_key);
 
-  const recentPlays = await playlistService.getMostRecentPlays();
-  const djPlay = recentPlays.find(
-    (playlistEvent) => playlistEvent.selector.id !== AUTOMATION_USER_ID
-  );
-  if (djPlay !== undefined && djPlay !== null) {
-    log.debug(log.entry(`Recent play by DJ: ${util.inspect(djPlay.selector)}`));
-    return {
-      status: 400,
-      body: { msg: "Recent play by DJ detected, skipping automation capture" },
-    };
+  try {
+    const recentPlays = await playlistService.getMostRecentPlays();
+    const djPlay = recentPlays.find(
+      (playlistEvent) => playlistEvent.selector.id !== AUTOMATION_USER_ID
+    );
+    if (djPlay !== undefined && djPlay !== null) {
+      log.debug(
+        log.entry(`Recent play by DJ: ${util.inspect(djPlay.selector)}`)
+      );
+      return {
+        status: 400,
+        body: {
+          msg: "Recent play by DJ detected, skipping automation capture",
+        },
+      };
+    }
+  } catch (error) {
+    if (error.response) {
+      log.warning(
+        log.entry(
+          `Received error: data-${error.response.data}, status-${error.response.status}`
+        )
+      );
+      return {
+        status: error.response.status,
+        body: { msg: error.response.data },
+      };
+    } else {
+      return { status: 500, body: { msg: error.message } };
+    }
   }
 
   const searchResults = await trackSearch.find(

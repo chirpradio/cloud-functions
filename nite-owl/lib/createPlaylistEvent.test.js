@@ -1,6 +1,7 @@
 const trackSearch = require("./trackSearch.service");
 const playlistService = require("./playlist.service");
 const createPlaylistEvent = require("./createPlaylistEvent");
+const { AxiosError } = require("axios");
 jest.mock("./playlist.service");
 jest.mock("./trackSearch.service");
 
@@ -95,5 +96,17 @@ describe("Validate functionality related to recent DJ plays", () => {
     expect(result.body.msg).toBe(
       "Recent play by DJ detected, skipping automation capture"
     );
+  });
+
+  test("API Key is invalid upon first request to nextup", async () => {
+    playlistService.getMostRecentPlays.mockRejectedValueOnce(
+      new AxiosError("Unauthorized", 401, null, null, {
+        status: 401,
+        data: "Unauthorized",
+      })
+    );
+    const result = await createPlaylistEvent.execute(req);
+    expect(result.status).toBe(401);
+    expect(result.body.msg).toBe("Unauthorized");
   });
 });

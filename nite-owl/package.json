@@ -4,7 +4,7 @@
   "description": "Record playlist events issued by overnight automation software",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx jest",
     "deploy:dev": "gcloud functions deploy handleAutomationPlaylistEvent --gen2 --runtime=nodejs20 --region=us-central1 --source=. --entry-point=createPlaylistEvent --trigger-http --allow-unauthenticated --env-vars-file=env.dev.yaml",
     "undeploy:dev": "gcloud functions delete handleAutomationPlaylistEvent --gen2 --region=us-central1",
     "start": "npx functions-framework --target=createPlaylistEvent",

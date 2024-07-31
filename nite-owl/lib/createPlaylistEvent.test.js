@@ -42,6 +42,18 @@ describe("Test base validation of requests", () => {
     expect(result.status).toBe(400);
     expect(result.body.msg).toBe("No artist included in request");
   });
+
+  test("Missing duration", async () => {
+    const result = await createPlaylistEvent.execute({
+      query: {
+        api_key: "secret",
+        title: "Diamond Jubilee",
+        artist: "Cindy Lee",
+      },
+    });
+    expect(result.status).toBe(400);
+    expect(result.body.msg).toBe("No duration included in request");
+  });
 });
 
 describe("Test the capture of tracks that have passed all validations", () => {
@@ -50,6 +62,7 @@ describe("Test the capture of tracks that have passed all validations", () => {
       api_key: "secret",
       title: "Battle of Hampton Roads",
       artist: "Titus Andronicus",
+      duration: 841,
     },
   };
   playlistService.getMostRecentPlays.mockReturnValue([]);
@@ -81,6 +94,7 @@ describe("Validate functionality related to recent DJ plays", () => {
       api_key: "secret",
       title: "Battle of Hampton Roads",
       artist: "Titus Andronicus",
+      duration: 841,
     },
   };
   test("Recent DJ play detected", async () => {

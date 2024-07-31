@@ -26,12 +26,20 @@ async function execute(req) {
     return { status: 400, body: { msg: "StationPlaylist Break event" } };
   }
 
-  if (!req.query.artist && !req.query["album_artist"]) {
+  if (!req.query.artist && !req.query.album_artist) {
     log.warning(
       log.entry(`No artist included for request ${JSON.stringify(req.query)}`)
     );
 
     return { status: 400, body: { msg: "No artist included in request" } };
+  }
+
+  if (!req.query.duration) {
+    log.warning(
+      log.entry(`No duration included for request ${JSON.stringify(req.query)}`)
+    );
+
+    return { status: 400, body: { msg: "No duration included in request" } };
   }
 
   log.debug(log.entry(util.inspect(req.query)));

@@ -27,7 +27,7 @@ function getTrackLocator(durationParams) {
     const candidates = searchResults.hits.map((hit) => {
       return {
         artist:
-          hit._source.track_artist ?? hit._source.album.album_artist?.name,
+          hit._source.track_artist.name ?? hit._source.album.album_artist?.name,
         album: hit._source.album.title,
         albumYear: hit._source.album.year,
         label: hit._source.album.label,

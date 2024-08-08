@@ -69,7 +69,9 @@ describe("Execute a basic search", () => {
               current_tags: [],
             },
             is_reviewed: false,
-            track_artist: "A Tribe Called Quest",
+            track_artist: {
+              name: "A Tribe Called Quest",
+            },
             duration_ms: 242912,
             track_num: 4,
           },

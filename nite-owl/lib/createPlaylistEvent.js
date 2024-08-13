@@ -32,8 +32,6 @@ function validateRequest(req) {
   }
 
   if (req.query.title === "_STOP") {
-    // StationPlaylist sends a predefined value when stopping the automation,
-    // in this case do not perform any actions
     return invalid(badRequest("StationPlaylist STOP event"));
   }
 
@@ -42,16 +40,10 @@ function validateRequest(req) {
   }
 
   if (!req.query.artist && !req.query.album_artist) {
-    // log.warning(
-    //   log.entry(`No artist included for request ${JSON.stringify(req.query)}`)
-    // );
     return invalid(badRequest("No artist included in request"));
   }
 
   if (!req.query.duration) {
-    // log.warning(
-    //   log.entry(`No duration included for request ${JSON.stringify(req.query)}`)
-    // );
     return invalid(badRequest("No duration included in request"));
   }
   return valid();
@@ -64,10 +56,14 @@ async function execute(req) {
 
   const validationResult = validateRequest(req);
   if (!validationResult.isValid) {
+    // Ensure API Key does not appear in logged query params
+    Object.defineProperty(req.query, "api_key", {
+      enumerable: false,
+    });
+    log.warning(log.entry(util.inspect(req.query)));
     return validationResult.response;
   }
 
-  log.debug(log.entry(util.inspect(req.query)));
   nextup.setApiKey(req.query.api_key);
 
   try {

@@ -4,7 +4,11 @@ const { Logging } = require("@google-cloud/logging");
 const logging = new Logging();
 const log = logging.logSync("trackSearch");
 
-const DURATION_TOLERANCE_MS = 30000;
+// The duration tolerance allows for some variation in song duration between
+// what is provided by StationPlaylist and what is present in the DJDB. Given that
+// the duration primarily included to limit results of searches with many hits,
+// we can safely tolerate a default of +/- 30 seconds in our lookups.
+const DURATION_TOLERANCE_MS = 30_000;
 
 function prepareDurationParams(durationSeconds) {
   const durationMs = durationSeconds * 1000;

@@ -7,39 +7,64 @@ const logging = new Logging();
 
 const AUTOMATION_USER_ID = process.env.AUTOMATION_USER_ID ?? "5820844800999424";
 
-async function execute(req) {
-  await logging.setProjectId();
-  await logging.setDetectedResource();
-  const log = logging.logSync("createPlaylistEvent");
+function response(status) {
+  return (msg) => {
+    return { status, body: { msg } };
+  };
+}
 
+const unauthorized = response(401);
+const badRequest = response(400);
+const internalServerError = response(500);
+
+function validationResult(isValid) {
+  return (response) => {
+    return { isValid, response };
+  };
+}
+
+const invalid = validationResult(false);
+const valid = validationResult(true);
+
+function validateRequest(req) {
   if (!req.query.api_key) {
-    return { status: 401, body: { msg: "No API Key Included with Request" } };
+    return invalid(unauthorized("Cannot authenticate request"));
   }
 
   if (req.query.title === "_STOP") {
     // StationPlaylist sends a predefined value when stopping the automation,
     // in this case do not perform any actions
-    return { status: 400, body: { msg: "StationPlaylist STOP event" } };
+    return invalid(badRequest("StationPlaylist STOP event"));
   }
 
   if (req.query.artist === "Live" && req.query.title === "Default User") {
-    return { status: 400, body: { msg: "StationPlaylist Break event" } };
+    return invalid(badRequest("StationPlaylist Break event"));
   }
 
   if (!req.query.artist && !req.query.album_artist) {
-    log.warning(
-      log.entry(`No artist included for request ${JSON.stringify(req.query)}`)
-    );
-
-    return { status: 400, body: { msg: "No artist included in request" } };
+    // log.warning(
+    //   log.entry(`No artist included for request ${JSON.stringify(req.query)}`)
+    // );
+    return invalid(badRequest("No artist included in request"));
   }
 
   if (!req.query.duration) {
-    log.warning(
-      log.entry(`No duration included for request ${JSON.stringify(req.query)}`)
-    );
+    // log.warning(
+    //   log.entry(`No duration included for request ${JSON.stringify(req.query)}`)
+    // );
+    return invalid(badRequest("No duration included in request"));
+  }
+  return valid();
+}
 
-    return { status: 400, body: { msg: "No duration included in request" } };
+async function execute(req) {
+  await logging.setProjectId();
+  await logging.setDetectedResource();
+  const log = logging.logSync("createPlaylistEvent");
+
+  const validationResult = validateRequest(req);
+  if (!validationResult.isValid) {
+    return validationResult.response;
   }
 
   log.debug(log.entry(util.inspect(req.query)));
@@ -54,12 +79,7 @@ async function execute(req) {
       log.debug(
         log.entry(`Recent play by DJ: ${util.inspect(djPlay.selector)}`)
       );
-      return {
-        status: 400,
-        body: {
-          msg: "Recent play by DJ detected, skipping automation capture",
-        },
-      };
+      return badRequest("Recent play by DJ detected, skipping capture");
     }
   } catch (error) {
     if (error.response) {
@@ -73,7 +93,7 @@ async function execute(req) {
         body: { msg: error.response.data },
       };
     } else {
-      return { status: 500, body: { msg: error.message } };
+      return internalServerError(error.message);
     }
   }
 

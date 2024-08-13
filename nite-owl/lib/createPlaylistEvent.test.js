@@ -108,7 +108,7 @@ describe("Validate functionality related to recent DJ plays", () => {
     const result = await createPlaylistEvent.execute(req);
     expect(result.status).toBe(400);
     expect(result.body.msg).toBe(
-      "Recent play by DJ detected, skipping automation capture"
+      "Recent play by DJ detected, skipping capture"
     );
   });
 

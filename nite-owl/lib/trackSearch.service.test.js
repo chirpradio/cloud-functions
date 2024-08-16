@@ -34,6 +34,7 @@ describe("Execute a basic search", () => {
             track_artist: null,
             duration_ms: 242912,
             track_num: 4,
+            __key: { path: ["Track", "123"] },
           },
         },
       ],
@@ -41,14 +42,19 @@ describe("Execute a basic search", () => {
     const searchResults = await trackSearch.find("Footprints", 254);
     expect(searchResults).toStrictEqual([
       {
-        artist: "A Tribe Called Quest",
-        albumYear: null,
+        artist: { id: undefined, name: "A Tribe Called Quest" },
         currentTags: [],
-        album: "People's Instinctive Travels and the Paths of Rhythm",
-        label: null,
-        title: "Footprints",
-        trackNumber: 4,
-        year: null,
+        album: {
+          id: undefined,
+          title: "People's Instinctive Travels and the Paths of Rhythm",
+          label: null,
+          year: null,
+        },
+        track: {
+          title: "Footprints",
+          number: 4,
+          id: ["Track", "123"],
+        },
       },
     ]);
   });
@@ -74,6 +80,7 @@ describe("Execute a basic search", () => {
             },
             duration_ms: 242912,
             track_num: 4,
+            __key: { path: ["Track", "123"] },
           },
         },
       ],
@@ -81,14 +88,19 @@ describe("Execute a basic search", () => {
     const searchResults = await trackSearch.find("Footprints", 254);
     expect(searchResults).toStrictEqual([
       {
-        artist: "A Tribe Called Quest",
-        albumYear: null,
+        artist: { id: undefined, name: "A Tribe Called Quest" },
         currentTags: [],
-        album: "People's Instinctive Travels and the Paths of Rhythm",
-        label: null,
-        title: "Footprints",
-        trackNumber: 4,
-        year: null,
+        album: {
+          id: undefined,
+          title: "People's Instinctive Travels and the Paths of Rhythm",
+          label: null,
+          year: null,
+        },
+        track: {
+          title: "Footprints",
+          number: 4,
+          id: ["Track", "123"],
+        },
       },
     ]);
   });
@@ -121,6 +133,7 @@ describe("Execute search retry with altered search terms", () => {
               track_artist: null,
               duration_ms: 242912,
               track_num: 4,
+              __key: { path: ["Track", "123"] },
             },
           },
         ],

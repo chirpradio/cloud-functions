@@ -7,6 +7,7 @@ const referenceDate = new Date("2024-07-15 12:00:00");
 beforeEach(() => {
   jest.useFakeTimers().setSystemTime(referenceDate);
   nextup.addPlaylistEvent.mockClear();
+  nextup.addPlaylistEventFreeform.mockClear();
   nextup.getPlaylist.mockClear();
 });
 
@@ -61,18 +62,39 @@ describe("Test recent playlist lookups", () => {
 
 describe("Test adding a playlist event", () => {
   const playListInput = {
-    artist: "DJ Rashad",
-    album: "Double Cup",
-    label: "Hyberdub",
-    title: "Everyday of my Life",
+    artist: { name: "DJ Rashad", id: 1234 },
+    album: { title: "Double Cup", label: "Hyberdub", id: "djDbAlbum" },
+    track: { title: "Everyday of my Life", id: "djDbTrack" },
   };
   nextup.addPlaylistEvent.mockReturnValue({});
-  test("Test base mapping of target track to playlist event input", async () => {
+  test("Test add playlist event", async () => {
     playlistService.addPlaylistEvent(
       Object.assign(playListInput, { currentTags: ["local_classic"] })
     );
     const mockedCallInput = JSON.parse(
       nextup.addPlaylistEvent.mock.calls[0][0]
+    );
+    expect(mockedCallInput.artist).toBe(1234);
+    expect(mockedCallInput.album).toBe("djDbAlbum");
+    expect(mockedCallInput.label).toBe("Hyberdub");
+    expect(mockedCallInput.track).toBe("djDbTrack");
+    expect(mockedCallInput.categories).toStrictEqual(["local_classic"]);
+  });
+});
+
+describe("Test adding a freeform playlist event", () => {
+  const playListInput = {
+    artist: { name: "DJ Rashad" },
+    album: { title: "Double Cup", label: "Hyberdub" },
+    track: { title: "Everyday of my Life" },
+  };
+  nextup.addPlaylistEventFreeform.mockReturnValue({});
+  test("Test base mapping of target track to playlist event input", async () => {
+    playlistService.addPlaylistEvent(
+      Object.assign(playListInput, { currentTags: ["local_classic"] })
+    );
+    const mockedCallInput = JSON.parse(
+      nextup.addPlaylistEventFreeform.mock.calls[0][0]
     );
     expect(mockedCallInput.artist.name).toBe("DJ Rashad");
     expect(mockedCallInput.album.title).toBe("Double Cup");
@@ -88,7 +110,7 @@ describe("Test adding a playlist event", () => {
       })
     );
     const mockedCallInput = JSON.parse(
-      nextup.addPlaylistEvent.mock.calls[0][0]
+      nextup.addPlaylistEventFreeform.mock.calls[0][0]
     );
     expect(mockedCallInput.artist.name).toBe("DJ Rashad");
     expect(mockedCallInput.album.title).toBe("Double Cup");
@@ -104,7 +126,7 @@ describe("Test adding a playlist event", () => {
       })
     );
     const mockedCallInput = JSON.parse(
-      nextup.addPlaylistEvent.mock.calls[0][0]
+      nextup.addPlaylistEventFreeform.mock.calls[0][0]
     );
     expect(mockedCallInput.artist.name).toBe("DJ Rashad");
     expect(mockedCallInput.album.title).toBe("Double Cup");

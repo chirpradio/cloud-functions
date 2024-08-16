@@ -43,8 +43,12 @@ module.exports = {
     const getter = instance.get("/playlist", { params });
     return getAndHandleError(getter);
   },
-  async addPlaylistEvent(data) {
+  async addPlaylistEventFreeform(data) {
     const response = await instance.post(`/playlist/freeform`, data);
+    return response.data;
+  },
+  async addPlaylistEvent(data) {
+    const response = await instance.post(`/playlist/track`, data);
     return response.data;
   },
 };

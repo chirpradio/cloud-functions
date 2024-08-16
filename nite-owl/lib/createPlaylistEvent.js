@@ -110,13 +110,12 @@ async function execute(req) {
   log.debug(log.entry(`Target artist: ${targetArtist}`));
   const targetTrack = searchResults.find(
     (result) =>
-      result.artist.toLowerCase() === targetArtist.toLowerCase() ||
-      result.album.toLowerCase() === req.query.album.toLowerCase()
+      result.artist.name.toLowerCase() === targetArtist.toLowerCase() ||
+      result.album.title.toLowerCase() === req.query.album.toLowerCase()
   ) ?? {
-    artist: req.query.artist,
-    album: req.query.album,
-    label: req.query.label,
-    title: req.query.title,
+    artist: { name: req.query.artist },
+    album: { title: req.query.album, label: req.query.label },
+    track: { title: req.query.title },
   };
 
   const result = await playlistService.addPlaylistEvent(targetTrack);

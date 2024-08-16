@@ -70,20 +70,18 @@ describe("Test the capture of tracks that have passed all validations", () => {
   test("Confirm matching of artist", async () => {
     trackSearch.find.mockReturnValue([
       {
-        artist: "TITUS ANDRONICUS",
-        title: "Battle of Hampton Roads",
-        label: "Merge",
-        album: "The Monitor",
+        artist: { name: "TITUS ANDRONICUS" },
+        track: { title: "Battle of Hampton Roads" },
+        album: { title: "The Monitor", label: "Merge" },
       },
     ]);
     const result = await createPlaylistEvent.execute(req);
     expect(result.body).toStrictEqual([]);
     expect(result.status).toBe(200);
     expect(playlistService.addPlaylistEvent).toHaveBeenCalledWith({
-      artist: "TITUS ANDRONICUS",
-      album: "The Monitor",
-      label: "Merge",
-      title: "Battle of Hampton Roads",
+      artist: { name: "TITUS ANDRONICUS" },
+      track: { title: "Battle of Hampton Roads" },
+      album: { title: "The Monitor", label: "Merge" },
     });
   });
 });

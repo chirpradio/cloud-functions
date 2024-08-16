@@ -30,16 +30,26 @@ function getTrackLocator(durationParams) {
     const searchResults = await nextup.search(params);
     const candidates = searchResults.hits.map((hit) => {
       return {
-        artist:
-          hit._source.track_artist?.name ??
-          hit._source.album.album_artist?.name,
-        album: hit._source.album.title,
-        albumYear: hit._source.album.year,
-        label: hit._source.album.label,
+        artist: {
+          name:
+            hit._source.track_artist?.name ??
+            hit._source.album.album_artist?.name,
+          id:
+            hit._source.track_artist?.__key?.path ??
+            hit._source.album.album_artist?.__key?.path,
+        },
+        album: {
+          title: hit._source.album.title,
+          id: hit._source.album.__key?.path,
+          year: hit._source.album.year,
+          label: hit._source.album.label,
+        },
+        track: {
+          title: hit._source.title,
+          id: hit._source.__key?.path,
+          number: hit._source.track_num,
+        },
         currentTags: hit._source.album.current_tags,
-        title: hit._source.title,
-        year: hit._source.album.year,
-        trackNumber: hit._source.track_num,
       };
     });
     return candidates;

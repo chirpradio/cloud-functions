@@ -1,0 +1,27 @@
+{
+  "name": "nite-owl",
+  "version": "1.0.0",
+  "description": "Record playlist events issued by overnight automation software",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx jest",
+    "deploy:dev": "gcloud functions deploy handleAutomationPlaylistEvent --gen2 --runtime=nodejs20 --region=us-central1 --source=. --entry-point=createPlaylistEvent --trigger-http --allow-unauthenticated --env-vars-file=env.dev.yaml",
+    "undeploy:dev": "gcloud functions delete handleAutomationPlaylistEvent --gen2 --region=us-central1",
+    "start": "npx functions-framework --target=createPlaylistEvent",
+    "dev": "nodemon --inspect node_modules/.bin/functions-framework --target=createPlaylistEvent"
+  },
+  "author": "Brian McDonnell <bmcdonn2@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.3.0",
+    "@google-cloud/logging": "^11.0.0",
+    "axios": "^1.6.7"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0",
+    "prettier": "^3.2.5"
+  }
+}

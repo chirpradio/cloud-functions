@@ -15,10 +15,12 @@ jobs:
       run:      
         working-directory: ./process-playlist-track
     steps:
-    - id: setup
-      uses: ./.github/workflows/setup.yaml
+    - id: checkout
+      uses: actions/checkout@v4
       with:
         ref: ${{ github.event.inputs.branch }}
+    - id: auth
+      uses: ./.github/workflows/auth.yaml
     - id: deploy
       uses: google-github-actions/deploy-cloud-functions@v3        
       with:

@@ -15,10 +15,6 @@ jobs:
       contents: read
       id-token: write
     steps:
-    - id: checkout
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.inputs.branch }}
     - id: auth
       uses: google-github-actions/auth@v2
       with:

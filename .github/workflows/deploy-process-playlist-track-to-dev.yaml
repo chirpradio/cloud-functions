@@ -14,9 +14,6 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    defaults:
-      run:      
-        working-directory: ./process-playlist-track
     steps:
     - id: checkout
       uses: actions/checkout@v4
@@ -30,6 +27,7 @@ jobs:
     - id: deploy
       uses: google-github-actions/deploy-cloud-functions@v3        
       with:
+        source_dir: ./process-playlist-track
         name: processPlaylistTrack
         runtime: nodejs20
         event_trigger_pubsub_topic: playlist-event

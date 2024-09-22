@@ -1,14 +1,15 @@
-name: Deploy to Dev
+name: Setup for Deploy
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       branch:
         description: Branch to deploy
         required: true
+        type: string     
 
 jobs:
-  deploy:
+  setup:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,12 +23,4 @@ jobs:
       uses: google-github-actions/auth@v2
       with:
         workload_identity_provider: projects/425991501736/locations/global/workloadIdentityPools/development/providers/github
-        service_account: github@chirpradiodev.iam.gserviceaccount.com   
-    - id: deploy
-      uses: google-github-actions/deploy-cloud-functions@v3
-      with:
-        name: processPlaylistTrack
-        runtime: nodejs20
-        event_trigger_pubsub_topic: playlist-event
-        environment_variables: |-
-          LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }}
+        service_account: github@chirpradiodev.iam.gserviceaccount.com

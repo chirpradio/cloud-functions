@@ -1,0 +1,29 @@
+name: Deploy processPlaylistTrack to Dev
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to deploy
+        required: true
+      
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:      
+        working-directory: ./process-playlist-track
+    steps:
+    - id: setup
+      uses: ./.github/workflows/setup.yaml
+      with:
+        ref: ${{ github.event.inputs.branch }}
+    - id: deploy
+      uses: google-github-actions/deploy-cloud-functions@v3        
+      with:
+        name: processPlaylistTrack
+        runtime: nodejs20
+        event_trigger_pubsub_topic: playlist-event
+        environment_variables: |-
+          LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }}

@@ -25,6 +25,7 @@ jobs:
         project_id: chirpradiodev
         workload_identity_provider: projects/425991501736/locations/global/workloadIdentityPools/development/providers/github
         service_account: github@chirpradiodev.iam.gserviceaccount.com
+        token_format: access_token
     - id: deploy
       uses: google-github-actions/deploy-cloud-functions@v3        
       with:

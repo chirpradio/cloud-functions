@@ -23,7 +23,8 @@ jobs:
       uses: google-github-actions/auth@v2
       with:
         project_id: chirpradiodev
-        workload_identity_provider: projects/425991501736/locations/global/workloadIdentityPools/development/providers/github        
+        workload_identity_provider: projects/425991501736/locations/global/workloadIdentityPools/development/providers/github
+        service_account: github@chirpradiodev.iam.gserviceaccount.com
     - id: deploy
       uses: google-github-actions/deploy-cloud-functions@v3        
       with:

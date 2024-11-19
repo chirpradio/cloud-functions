@@ -1,27 +1,36 @@
-name: Deploy processPlaylistTrack to Dev
+name: Deploy processPlaylistTrack
 
 on:
   workflow_dispatch:
     inputs:
+      environment:
+        type: environment
+        default: chirpradiodev  
       branch:
         description: Branch to deploy
         required: true
-      
+
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:      
-        working-directory: ./process-playlist-track
+    environment: ${{ github.event.inputs.environment }}
+    permissions:
+      contents: read
+      id-token: write
     steps:
-    - id: setup
-      uses: ./.github/workflows/setup.yaml
+    - id: checkout
+      uses: actions/checkout@v4
       with:
         ref: ${{ github.event.inputs.branch }}
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
     - id: deploy
       uses: google-github-actions/deploy-cloud-functions@v3        
       with:
+        source_dir: ./process-playlist-track
         name: processPlaylistTrack
         runtime: nodejs20
         event_trigger_pubsub_topic: playlist-event

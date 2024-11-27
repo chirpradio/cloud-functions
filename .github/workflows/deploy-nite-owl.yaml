@@ -34,6 +34,6 @@ jobs:
         source_dir: ./nite-owl
         name:  handleAutomationPlaylistEvent
         runtime: nodejs20
-        entrypoint: createPlaylistEvent
+        entry_point: createPlaylistEvent
         environment_variables: |-
           API_URL=${{ vars.NEXTUP_API_URL }}

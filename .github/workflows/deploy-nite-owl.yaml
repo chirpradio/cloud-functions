@@ -1,0 +1,39 @@
+name: Deploy nite-owl
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to deploy
+        required: true
+      environment:
+        description: Target deployment environment
+        type: environment
+        default: chirpradiodev
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - id: checkout
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.branch }}
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
+    - id: deploy
+      uses: google-github-actions/deploy-cloud-functions@v3
+      with:
+        source_dir: ./nite-owl
+        name:  handleAutomationPlaylistEvent
+        runtime: nodejs20
+        entry_point: createPlaylistEvent
+        environment_variables: |-
+          API_URL=${{ vars.NEXTUP_API_URL }}

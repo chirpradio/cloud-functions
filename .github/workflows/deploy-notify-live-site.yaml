@@ -1,0 +1,38 @@
+name: Deploy notifyLiveSite
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        default: chirpradiodev  
+      branch:
+        description: Branch to deploy
+        required: true
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - id: checkout
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.branch }}
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
+    - id: deploy
+      uses: google-github-actions/deploy-cloud-functions@v3        
+      with:
+        source_dir: ./update-playlist-storage
+        name: notifyLiveSite
+        runtime: nodejs20
+        event_trigger_pubsub_topic: playlist-storage-updated
+        environment_variables: |-
+          urls=${{ secrets.UPDATE_API_URLS }}          

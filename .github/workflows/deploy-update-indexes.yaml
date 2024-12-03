@@ -1,0 +1,33 @@
+name: Deploy updateIndexes
+
+on:
+  workflow_dispatch:
+    inputs:  
+      branch:
+        description: Branch to deploy
+        required: true
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: chirpradio-hrd
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - id: checkout
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.branch }}
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
+    - id: deploy
+      uses: google-github-actions/deploy-cloud-functions@v3        
+      with:
+        source_dir: ./update-indexes
+        name: updateIndexes
+        runtime: nodejs20
+        event_trigger_pubsub_topic: update_indexes

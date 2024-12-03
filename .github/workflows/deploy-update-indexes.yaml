@@ -1,21 +1,17 @@
-name: Deploy nite-owl
+name: Deploy updateIndexes
 
 on:
   workflow_dispatch:
-    inputs:
+    inputs:  
       branch:
         description: Branch to deploy
         required: true
-      environment:
-        description: Target deployment environment
-        type: environment
-        default: chirpradiodev
-        required: true
+
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
+    environment: chirpradio-hrd
     permissions:
       contents: read
       id-token: write
@@ -29,11 +25,9 @@ jobs:
       with:
         credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
     - id: deploy
-      uses: google-github-actions/deploy-cloud-functions@v3
+      uses: google-github-actions/deploy-cloud-functions@v3        
       with:
-        source_dir: ./nite-owl
-        name:  handleAutomationPlaylistEvent
+        source_dir: ./update-indexes
+        name: updateIndexes
         runtime: nodejs20
-        entry_point: createPlaylistEvent
-        environment_variables: |-
-          API_URL=${{ vars.NEXTUP_API_URL }}
+        event_trigger_pubsub_topic: update_indexes

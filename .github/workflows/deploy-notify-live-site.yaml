@@ -30,7 +30,7 @@ jobs:
     - id: deploy
       uses: google-github-actions/deploy-cloud-functions@v3        
       with:
-        source_dir: ./update-playlist-storage
+        source_dir: ./notify-live-site
         name: notifyLiveSite
         runtime: nodejs20
         event_trigger_pubsub_topic: playlist-storage-updated

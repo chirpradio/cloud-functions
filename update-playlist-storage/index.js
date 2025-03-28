@@ -1,6 +1,9 @@
 const functions = require("@google-cloud/functions-framework");
 const updatePlaylistStorage = require("./lib/updatePlaylistStorage");
-const updatePlaylistStorageFromDJDB = require("./lib/updatePlaylistStorageFromDJDB");
+const updatePlaylistStorageFromDatastore = require("./lib/updatePlaylistStorageFromDatastore");
 
-functions.cloudEvent("updatePlaylistStorage", updatePlaylistStorageFromDJDB);
+functions.cloudEvent(
+  "updatePlaylistStorage",
+  updatePlaylistStorageFromDatastore,
+);
 functions.cloudEvent("updatePlaylistStorageV2", updatePlaylistStorage);

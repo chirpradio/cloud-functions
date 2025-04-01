@@ -52,8 +52,15 @@ async function getAssociatedEntities(events) {
   }, {});
 }
 
-function replace(event, eventProp, associations, kind, keyProp) {
+function replace(event, eventProp, associations, kind) {
   if (event[eventProp]) {
+    /* 
+      Albums and Tracks use "name" consistently
+      Users use "id" consistently
+      but Artists have either "name" or "id" properties
+      depending on when they were imported
+    */
+    const keyProp = Object.hasOwn(event[eventProp], "name") ? "name" : "id";
     event[eventProp] = associations[kind].find(
       (entity) => entity[datastore.KEY][keyProp] === event[eventProp][keyProp],
     );
@@ -62,10 +69,10 @@ function replace(event, eventProp, associations, kind, keyProp) {
 
 async function join(events, associations) {
   for (const event of events) {
-    replace(event, "selector", associations, "User", "id");
-    replace(event, "album", associations, "Album", "name");
-    replace(event, "artist", associations, "Artist", "name");
-    replace(event, "track", associations, "Track", "name");
+    replace(event, "selector", associations, "User");
+    replace(event, "album", associations, "Album");
+    replace(event, "artist", associations, "Artist");
+    replace(event, "track", associations, "Track");
 
     const [urlSafeKey] = await datastore.keyToLegacyUrlSafe(
       event[datastore.KEY],
@@ -92,6 +99,9 @@ module.exports = async function () {
     };
     await file.save(JSON.stringify(output), {
       contentType: "application/json",
+      metadata: {
+        cacheControl: "public, max-age=10",
+      },
     });
   } catch (error) {
     console.error(error);

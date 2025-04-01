@@ -101,6 +101,9 @@ module.exports = async function () {
     };
     await file.save(JSON.stringify(output), {
       contentType: "application/json",
+      metadata: {
+        cacheControl: "public, max-age=10",
+      },
     });
   } catch (error) {
     console.error(error);

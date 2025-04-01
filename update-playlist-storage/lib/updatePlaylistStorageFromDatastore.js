@@ -60,11 +60,9 @@ function replace(event, eventProp, associations, kind) {
       but Artists have either "name" or "id" properties
       depending on when they were imported
     */
-    const keyProp = event[eventProp].hasOwnProperty("name") ? "name" : "id";
+    const keyProp = Object.hasOwn(event[eventProp], "name") ? "name" : "id";
     event[eventProp] = associations[kind].find(
-      (entity) => {        
-        return entity[datastore.KEY][keyProp] === event[eventProp][keyProp];
-      },
+      (entity) => entity[datastore.KEY][keyProp] === event[eventProp][keyProp],
     );
   }
 }
@@ -74,7 +72,7 @@ async function join(events, associations) {
     replace(event, "selector", associations, "User");
     replace(event, "album", associations, "Album");
     replace(event, "artist", associations, "Artist");
-    replace(event, "track", associations, "Track");    
+    replace(event, "track", associations, "Track");
 
     const [urlSafeKey] = await datastore.keyToLegacyUrlSafe(
       event[datastore.KEY],

@@ -41,9 +41,10 @@ async function getAssociatedEntities(events) {
     User: events.map((event) => event.selector),
   };
 
-  const promises = Object.entries(kindsWithKeys).map(([kind, keys]) =>
-    getEntitiesByKind(kind, keys),
-  );
+  const promises = Object.entries(kindsWithKeys)
+    // eslint-disable-next-line no-unused-vars
+    .filter(([kind, keys]) => keys.length)
+    .map(([kind, keys]) => getEntitiesByKind(kind, keys));
 
   const results = await Promise.all(promises);
   return results.reduce((acc, { kind, entities }) => {
